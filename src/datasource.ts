@@ -127,6 +127,7 @@ export class DataSource extends DataSourceApi<LightstepQuery, LightstepDataSourc
 
         // Use Grafana's variable interpolation to get click time
         const stringifiedQueryString = stringify(queryString).replace(clickMillisPlaceholder, '${__value.time}');
+        const labels = transformLabels(series['group-labels']);
 
         // Each series will get its own Field
         // The field's values are initially set to `null`. The actual values
@@ -142,7 +143,7 @@ export class DataSource extends DataSourceApi<LightstepQuery, LightstepDataSourc
             ],
           },
           labels: transformLabels(series['group-labels']),
-          name: '',
+          name: Object.keys(labels).length !== 1 ? visibleTargets[i].text : '',
           type: FieldType.number,
           values: new Array(timestamps.length).fill(null),
         };
@@ -162,7 +163,6 @@ export class DataSource extends DataSourceApi<LightstepQuery, LightstepDataSourc
       frames.push(
         new MutableDataFrame({
           fields,
-          name: `${visibleTargets[i].refId}-Series`,
           refId: visibleTargets[i].refId,
         })
       );
