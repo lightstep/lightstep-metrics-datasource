@@ -6,6 +6,7 @@ import {
   DataSourceInstanceSettings,
   FieldConfig,
   FieldType,
+  Labels,
   MutableDataFrame,
 } from '@grafana/data';
 import { config, getBackendSrv, getTemplateSrv } from '@grafana/runtime';
@@ -127,7 +128,6 @@ export class DataSource extends DataSourceApi<LightstepQuery, LightstepDataSourc
 
         // Use Grafana's variable interpolation to get click time
         const stringifiedQueryString = stringify(queryString).replace(clickMillisPlaceholder, '${__value.time}');
-        const labels = transformLabels(series['group-labels']);
 
         // Each series will get its own Field
         // The field's values are initially set to `null`. The actual values
@@ -142,8 +142,7 @@ export class DataSource extends DataSourceApi<LightstepQuery, LightstepDataSourc
               },
             ],
           },
-          labels: transformLabels(series['group-labels']),
-          name: Object.keys(labels).length !== 1 ? visibleTargets[i].text : '',
+          name: generateFieldName(transformLabels(series['group-labels']), visibleTargets[i].text),
           type: FieldType.number,
           values: new Array(timestamps.length).fill(null),
         };
@@ -225,7 +224,7 @@ export class DataSource extends DataSourceApi<LightstepQuery, LightstepDataSourc
  * Transforms 'key=value' strings to { key: 'value' } objects
  * @param  {Array<string>} groupLabels
  */
-export function transformLabels(groupLabels: string[] = []) {
+export function transformLabels(groupLabels: string[] = []): Labels {
   return groupLabels.reduce((acc: { [key: string]: string }, val) => {
     const [labelKey, labelValue] = val.split('=');
     acc[labelKey] = labelValue;
@@ -288,4 +287,20 @@ function getLanguageProperty(language: LightstepQueryLanguage): string {
     return 'promql_query';
   }
   return '';
+}
+
+/**
+ * Format labels for charts
+ * */
+export function generateFieldName(labels: Labels, queryText: string): string {
+  if (!labels || Object.keys(labels).length === 0) {
+    return queryText;
+  }
+
+  const formattedLabels = Object.keys(labels)
+    .sort((a, b) => a.localeCompare(b))
+    .map((key) => `${key}="${labels[key]}"`)
+    .join(', ');
+
+  return `{${formattedLabels}}`;
 }

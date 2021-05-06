@@ -1,4 +1,4 @@
-import { generateSortedTimestamps, generateTimestampMap, transformLabels } from './datasource.ts';
+import { generateFieldName, generateSortedTimestamps, generateTimestampMap, transformLabels } from './datasource.ts';
 
 describe('generateSortedTimestamps', () => {
   test('should compile and sort all timestamps across all series', () => {
@@ -54,5 +54,20 @@ describe('transformLabels', () => {
     // Check edges
     expect(transformLabels([])).toEqual({});
     expect(transformLabels()).toEqual({});
+  });
+});
+
+describe('generateFieldName', () => {
+  test('should return field name string sorted by label key', () => {
+    const labels = { z: 'a', y: 'y', a: 'z' };
+
+    expect(generateFieldName(labels)).toBe('{a="z", y="y", z="a"}');
+  });
+
+  test('should return query', () => {
+    expect(generateFieldName(null, 'Query text')).toBe('Query text');
+
+    const emptyLabels = {};
+    expect(generateFieldName(emptyLabels, 'Query text')).toBe('Query text');
   });
 });
