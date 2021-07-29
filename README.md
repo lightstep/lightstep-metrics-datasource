@@ -109,8 +109,3 @@ You're taken into Change Intelligence in Lightstep, where you can [start your in
 
 ![Change Intelligence](https://github.com/lightstep/lightstep-metrics-datasource/raw/main/images/docs/graf_metciPW.png)
 
-View the query you made in Grafana by clicking the **View query** button.
-
-![View Grafana query](https://github.com/lightstep/lightstep-metrics-datasource/raw/main/images/docs/graf_metciViewQuery.png)
-
-<!-- TODO: add a link to the Learning Path for Prom+Grafana, once available -->
