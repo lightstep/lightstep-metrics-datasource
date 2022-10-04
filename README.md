@@ -1,4 +1,7 @@
-# Lightstep Metrics Plugin
+# DEPRECATED: Lightstep Metrics Plugin
+
+## This data source has been deprecated. Please use https://github.com/lightstep/lightstep-observability-datasource.
+
 
 The Lightstep Metrics Plugin allows you to view metrics from Lightstep directly in Grafana. With minimal effort, you can use the plugin to continue viewing your existing visualizations in Grafana, using Lightstep as the data source. Then when you notice a deviation, you can click in a chart in Grafana and navigate into Lightstep to use [Change Intelligence](https://docs.lightstep.com/docs/investigate-metric-deviation) and uncover the root cause.
 
